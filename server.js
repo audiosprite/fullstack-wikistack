@@ -10,6 +10,8 @@ var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
 
+var models = require('./models');
+
 //
 // ## SimpleServer `SimpleServer(obj)`
 //
@@ -67,6 +69,7 @@ function updateRoster() {
       socket.get('name', callback);
     },
     function (err, names) {
+      if (err) console.log(err);
       broadcast('roster', names);
     }
   );
@@ -78,7 +81,14 @@ function broadcast(event, data) {
   });
 }
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
-  var addr = server.address();
-  console.log("Chat server listening at", addr.address + ":" + addr.port);
-});
+models.User.sync({})
+  .then(function() {
+    return models.Page.sync({});
+  })
+  .then(function() {
+    server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
+      var addr = server.address();
+      console.log("Chat server listening at", addr.address + ":" + addr.port);
+    });
+  })
+  .catch(console.error);
