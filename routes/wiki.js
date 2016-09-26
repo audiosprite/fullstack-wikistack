@@ -58,7 +58,8 @@ router.get('/:urlTitle', function(req, res, next){
   // console.log(thisUrl);
   thisUrl
     .then((data) => {
-      res.render('wikipage', data);
+      // console.log(data);
+      res.render('wikipage', {data: data});
     })
     .catch(next);
 });
@@ -71,7 +72,7 @@ router.get('/users/:id', (req, res, next) => {
     }
   })
     .then((newdata) => {
-      res.render('index', {newdata: newdata});
+      res.render('user', {newdata: newdata});
     })
     .catch(console.error);
 });

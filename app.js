@@ -17,6 +17,9 @@ const User = models.User;
 // instance, which we'll want to use to add Markdown support later.
 var env = nunjucks.configure('views', {noCache: true});
 
+var AutoEscapeExtension = require("nunjucks-autoescape")(nunjucks);
+env.addExtension('AutoEscapeExtension', new AutoEscapeExtension(env));
+
 // have res.render work with html files
 app.set('view engine', 'html');
 
@@ -45,9 +48,9 @@ app.use('/wiki', wikiRouter);
 
 app.use(express.static('public'));
 
-models.User.sync()
+models.User.sync({force: true})
   .then(function() {
-    return models.Page.sync();
+    return models.Page.sync({force: true});
   })
   .then(function() {
     console.log('Starting server');

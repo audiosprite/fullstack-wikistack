@@ -1,6 +1,7 @@
 'use strict';
 var Sequelize = require('sequelize');
 var db = new Sequelize('postgres://localhost:5432/wikistack');
+var marked = require('marked');
 
 var Page = db.define('page', {
   title: {
@@ -21,18 +22,19 @@ var Page = db.define('page', {
   date: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
-  },
-  route: {
-    type: Sequelize.STRING,
-    get: function() {
-      var urlTitle = this.getDataValue('urlTitle');
-      return `/wiki/${urlTitle}`;
-    }
   }
 }, {
   hooks: {
     beforeValidate: (page, options) => {
-      page.urlTitle = page.title.replace(/\s+/g,'_').replace(/\W/g,'');
+      page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+    }
+  },
+  getterMethods: {
+    route: function () {
+      return '/wiki/' + this.urlTitle;
+    },
+    renderedContent: function() {
+      return marked(this.content);
     }
   }
 });
@@ -49,7 +51,9 @@ var User = db.define('user', {
   }
 });
 
-Page.belongsTo(User, { as: 'author' });
+Page.belongsTo(User, {
+  as: 'author'
+});
 
 module.exports = {
   Page: Page,
