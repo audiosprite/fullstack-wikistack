@@ -14,12 +14,17 @@
     "express": "^3.2.6",
     "morgan": "^1.7.0",
     "nunjucks": "^2.5.2",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.24.3",
     "socket.io": "~0.9.14"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon -e html,js,css ./app.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.10.2"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/audiosprite/fullstack-wikistack/issues"
