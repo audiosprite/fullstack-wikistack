@@ -2,7 +2,7 @@
 var Sequelize = require('sequelize');
 var db = new Sequelize('postgres://localhost:5432/wikistack');
 
-let Page = db.define('page', {
+var Page = db.define('page', {
   title: {
     type: Sequelize.STRING,
     allowNull: false
@@ -29,9 +29,15 @@ let Page = db.define('page', {
       return `/wiki/${urlTitle}`;
     }
   }
+}, {
+  hooks: {
+    beforeValidate: (page, options) => {
+      page.urlTitle = page.title.replace(/\s+/g,'_').replace(/\W/g,'');
+    }
+  }
 });
 
-let User = db.define('user', {
+var User = db.define('user', {
   name: {
     type: Sequelize.STRING,
     allowNull: false
@@ -42,6 +48,8 @@ let User = db.define('user', {
     allowNull: false
   }
 });
+
+Page.belongsTo(User, { as: 'author' });
 
 module.exports = {
   Page: Page,
