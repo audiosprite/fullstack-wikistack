@@ -33,7 +33,7 @@ router.get('/add', (req, res, next) => {
 //     return models.Page.sync({});
 //   })
 //   .then(function() {
-//     console.log('Starting server');
+    console.log('Starting server');
     app.listen(3000);
   // })
   // .catch(console.error);
